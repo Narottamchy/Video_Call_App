@@ -53,8 +53,30 @@ io.on("connection",(socket)=>{
         console.log(rooms); //this is an array of all rooms
     })
 
+    // this is the event for the message sending to the other user who created the room which will be broadcasted to him as the other user joined the room
     socket.on("ready",(roomName)=>{
         console.log("Ready");
+        // basically this is the event which will be broadcasted to the other user who created the room and let them know had anyone joined
         socket.broadcast.to(roomName).emit("ready");
+    })
+
+    // here the port number is sended to both user as the candidate and the other user will be able to connect to the other user
+    socket.on("candidate",(candidate,roomName)=>{
+        console.log("Candidate");
+        // idhr ice candidate jo hai server side aur client side dono side hum ice candidate bhejre mtlb server se gya client pe catch then clint bhejega
+        socket.broadcast.to(roomName).emit("candidate",candidate);
+    })
+
+    // offer bheja gya dono sides se and jaise candidate gya waise hi
+    socket.on("offer",(offer,roomName)=>{
+        console.log("Offer");
+        console.log(offer);
+        socket.broadcast.to(roomName).emit("offer",offer);
+    })
+
+    // answer bheja gya dono sides se and jaise candidate gya waise hi
+    socket.on("answer",(answer,roomName)=>{
+        console.log("Ready");
+        socket.broadcast.to(roomName).emit("answer",answer);
     })
 })
